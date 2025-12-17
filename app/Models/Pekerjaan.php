@@ -11,14 +11,8 @@ class Pekerjaan extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'pekerjaan';
+    protected $fillable = ['nama'];
 
-    // ✅ INI YANG MEMPERBAIKI ERROR "Add [nama] to fillable"
-    protected $fillable = [
-        'nama',
-        'deskripsi'
-    ];
-
-    // relasi (untuk withCount)
     public function pegawai()
     {
         return $this->hasMany(Pegawai::class, 'pekerjaan_id');
