@@ -8,13 +8,19 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pekerjaan extends Model
 {
-    use HasFactory, SoftDeletes;  // <-- TAMBAHAN SoftDeletes
+    use HasFactory, SoftDeletes;
 
     protected $table = 'pekerjaan';
-    
+
+    // ✅ INI YANG MEMPERBAIKI ERROR "Add [nama] to fillable"
     protected $fillable = [
-        // ... kolom-kolom yang ada
+        'nama',
+        'deskripsi'
     ];
-    
-    // ... kode lainnya
+
+    // relasi (untuk withCount)
+    public function pegawai()
+    {
+        return $this->hasMany(Pegawai::class, 'pekerjaan_id');
+    }
 }

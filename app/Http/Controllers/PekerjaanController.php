@@ -9,25 +9,32 @@ use Illuminate\Validation\Rule;
 
 class PekerjaanController extends Controller
 {
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $keyword = $request->get('keyword');
-        $data = Pekerjaan::when($keyword, function ($query) use ($keyword) {
-            $query->where('nama', 'like', "%{$keyword}%")->orWhere('deskripsi', 'like', "%{$keyword}%");
-        })->get();
+        $data = Pekerjaan::withCount('pegawai')
+            ->when($keyword, function ($query) use ($keyword) {
+                $query->where('nama', 'like', "%{$keyword}%")->orWhere('deskripsi', 'like', "%{$keyword}%");
+            })
+            ->paginate(10)
+            ->withQueryString();
         return view('pekerjaan.index', compact('data'));
     }
 
-    public function add() {
+    public function add()
+    {
         return view('pekerjaan.add');
     }
 
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string',
             'deskripsi' => 'required|string',
         ]);
 
-        if ($validator->fails()) return redirect()->back()->with($validator->errors()->all());
+        if ($validator->fails())
+            return redirect()->back()->with($validator->errors()->all());
 
         $data = new Pekerjaan();
         $data->nama = $request->nama;
@@ -40,18 +47,21 @@ class PekerjaanController extends Controller
         }
     }
 
-    public function edit(Request $request) {
+    public function edit(Request $request)
+    {
         $data = Pekerjaan::findOrFail($request->id);
         return view('pekerjaan.edit', compact('data'));
     }
 
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string',
             'deskripsi' => 'required|string',
         ]);
 
-        if ($validator->fails()) return redirect()->back()->with($validator->errors()->all());
+        if ($validator->fails())
+            return redirect()->back()->with($validator->errors()->all());
 
         $data = Pekerjaan::findOrFail($request->id);
 
@@ -65,7 +75,8 @@ class PekerjaanController extends Controller
         }
     }
 
-    public function destroy(Request $request) {
+    public function destroy(Request $request)
+    {
         Pekerjaan::findOrFail($request->id)->delete();
         return redirect()->route('pekerjaan.index')->with('success', 'Data terhapus');
     }
