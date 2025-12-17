@@ -4,17 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;  // <-- Tambahan softdeletes
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pegawai extends Model
 {
-    use HasFactory, SoftDeletes;  // <-- Tambahan softdeletes
+    use HasFactory, SoftDeletes;
 
     protected $table = 'pegawai';
     
     protected $fillable = [
-        // ... kolom-kolom yang ada
+        'pekerjaan_id',
+        'nama',
+        'email',
+        'gender',
+        'is_active'
     ];
-    
-    // ... kode lainnya
+
+    // Relasi ke Pekerjaan
+    public function pekerjaan()
+    {
+        return $this->belongsTo(Pekerjaan::class, 'pekerjaan_id');
+    }
 }
