@@ -2,14 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pekerjaan extends Model
 {
-    protected $table = 'pekerjaan';
+    use HasFactory, SoftDeletes;  // <-- TAMBAHAN SoftDeletes
 
-    public function pegawai()
-    {
-        return $this->hasMany(Pegawai::class);
-    }
+    protected $table = 'pekerjaan';
+    
+    protected $fillable = [
+        // ... kolom-kolom yang ada
+    ];
+    
+    // ... kode lainnya
 }
